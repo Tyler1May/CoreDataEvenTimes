@@ -23,16 +23,7 @@ struct ContentView: View {
                     NavigationLink {
                         Text("Item at \(item.timestamp!, formatter: itemFormatter)")
                     } label: {
-                        HStack {
-                            Text(item.timestamp!, formatter: itemFormatter)
-                            
-                            Spacer()
-                            
-                            if item.hasEvenMinutesAndSeconds {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.green)
-                            }
-                        }
+                        Text(item.timestamp!, formatter: itemFormatter)
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -53,22 +44,10 @@ struct ContentView: View {
 
     private func addItem() {
         withAnimation {
-            // Create a new item
             let newItem = Item(context: viewContext)
-            // Update the properties of the new item
             newItem.timestamp = Date()
-            newItem.hasEvenMinutesAndSeconds = dateIsAllEven(Date())
             try? viewContext.save()
         }
-    }
-
-    /// Determines if the date passed in has an even number of minutes and seconds
-    private func dateIsAllEven(_ date: Date) -> Bool {
-        let minutes = Calendar.current.component(.minute, from: date)
-        let seconds = Calendar.current.component(.second, from: date)
-        let minutesAreEven = minutes % 2 == 0
-        let secondsAreEven = seconds % 2 == 0
-        return minutesAreEven && secondsAreEven
     }
 
     private func deleteItems(offsets: IndexSet) {
